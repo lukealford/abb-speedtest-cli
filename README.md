@@ -12,7 +12,7 @@ npm install
 ```
 
 
-## Basic usage**
+## Basic usage
 
 Run using `abb-speedtest`
 
