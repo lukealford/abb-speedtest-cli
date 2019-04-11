@@ -1,6 +1,6 @@
 # abb-speedtest
 
-A CLI tool for running https://speed.aussiebroadband.com.au  in a headless envoriment
+A CLI tool for running https://speed.aussiebroadband.com.au  in a headless environment
 
 
 **Setup**
