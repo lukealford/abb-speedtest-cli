@@ -2,7 +2,7 @@
   "name": "abb-speedtest-cli",
   "version": "1.0.0",
   "description": "A cli tool for running aussie broadband speed test",
-  "main": "speed.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
