@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var program = require('commander');
-var speedtest = require('./speed').speedTest;
+var speedtest = require('./index').speedTest;
 
 
 program
