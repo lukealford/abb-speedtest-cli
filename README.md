@@ -37,7 +37,7 @@ Use the `-j` flag example `abb-speedtest -j`
 {   
     "location": "Melbourne",
     "ping": 26,
-    "jitter": 6',
+    "jitter": 6,
     "download": 47.2,
     "upload": 17.5 
 }
