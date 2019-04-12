@@ -9,10 +9,9 @@ const chromeLauncher = require('chrome-launcher');
 const util = require('util');
 const { PendingXHR } = require('pending-xhr-puppeteer');
 const fs = require('fs');
+const flags = require('./chromeFlags');
 
 async function getSpeed() {
-    
-
     const chrome  = await launch(puppeteer);
     const resp = await util.promisify(request)(`http://localhost:${chrome.port}/json/version`)
     const { webSocketDebuggerUrl } = JSON.parse(resp.body)
@@ -37,18 +36,7 @@ async function getSpeed() {
     await page.waitForSelector('#results',{visible:true,timeout:0})
     await page.waitFor(500);
     await pendingXHR.waitForAllXhrFinished();
-    //stuff for screenshot
-    const month =  new Date().getMonth()+1;         
-    const year = new Date().getFullYear();
-    const date = month+"_"+year;
-    const time =  new Date().getTime();
-    // const filename = encodeURI('speedtest_'+date+'_'+time+'.png');
-    // console.log(filename);
-    // const base64 = await page.screenshot({path:'./'+filename, encoding:'base64', clip: { x:620, y:208, width: 677.3, height: 481.8   }})
-  
     const result = await speedFrame.evaluate(() => {
-
-
       function timenow(){
           var now= new Date(), 
           ampm= 'am', 
@@ -59,13 +47,10 @@ async function getSpeed() {
               if(h>12) h -= 12;
               ampm= 'pm';
           }
-      
           if(m<10) m= '0'+m;
           if(s<10) s= '0'+s;
           return now.toLocaleDateString()+ ' ' + h + ':' + m + ':' + s + ' ' + ampm;
       }
-
-        
       let loctemp = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > footer > div.host-display-transition > div > div.host-display__connection.host-display__connection--sponsor > div.host-display__connection-body > h4 > span').innerText;
       let split = loctemp.split(',')
       let location = split[0];
@@ -77,7 +62,6 @@ async function getSpeed() {
       let res = {
         location,ping,jitter,download,upload,date
       }
-      
       return res
     })
     
@@ -89,91 +73,79 @@ async function getSpeed() {
   }
   
 async function runSpeed(option){
-console.log('Booting speedtest');
-let result = await getSpeed();
-return new Promise(async (resolve, reject)  => {
-    if(result){
-        if(option.json === true){
+  console.log('Booting speedtest');
+  let result = await getSpeed();
+  return new Promise(async (resolve, reject)  => {
+      if(result){
+          if(option.json === true){
+              if(option.save === true){
+                try {
+                  await checkDirectorySync(option.saveDir);
+                  await saveFile(option.saveDir,result.result,'json');
+                } catch (err) {
+                  console.error(err)
+                }
+              }else{
+                console.log('results:',result.result);
+              }
+          }
+          else if(option.csv == true){
             if(option.save === true){
               try {
-                await checkDirectorySync(option.saveDir);
-                await saveFile(option.saveDir,result.result,'json');
-  
+                checkDirectorySync(option.saveDir);
+                await saveFile(option.saveDir,result.result,'csv');
               } catch (err) {
                 console.error(err)
               }
-            }else{
-              console.log('results:',result.result);
             }
-            
-        }
-        else if(option.csv == true){
-          if(option.save === true){
-            try {
-              checkDirectorySync(option.saveDir);
-              await saveFile(option.saveDir,result.result,'csv');
-
-            } catch (err) {
-              console.error(err)
+            else{
+              jsonexport(result.result,function(err, csv){
+                if(err) return console.log(err);
+                console.log(csv);
+              });
             }
           }
           else{
-            jsonexport(result.result,function(err, csv){
-              if(err) return console.log(err);
-              console.log(csv);
-            });
+            outputConsole(result.result);
           }
-        }
-        else{
-            console.log('-----------Results-----------');
-            console.log('Date: %s',result.result.date);
-            console.log('Server: %s',result.result.location);
-            console.log('Ping: %s ms',result.result.ping);
-            console.log('Jitter: %s ms',result.result.jitter);
-            console.log('Download: %s Mbps',result.result.download);
-            console.log('Upload: %s Mbps',result.result.upload);
-            console.log('-----------------------------');
-        }
-
-    }else{
-        console.log('Speedtest failed');
-    }
-})
+      }else{
+          console.log('Speedtest failed');
+      }
+  })
 }
 
 
 // Launch Puppeteer
 async function launch (puppeteer) {
-    let flag = [
-      '--headless',
-      '--disable-gpu',
-      '--proxy-server="direct://"',
-      '--proxy-bypass-list=*',
-      '--disable-background-networking',
-      '--disable-background-timer-throttling',
-      '--disable-backgrounding-occluded-windows',
-      '--disable-breakpad',
-      '--disable-client-side-phishing-detection',
-      '--disable-default-apps',
-      '--disable-dev-shm-usage',
-      '--disable-extensions',
-      '--disable-features=site-per-process',
-      '--disable-hang-monitor',
-      '--disable-ipc-flooding-protection',
-      '--disable-popup-blocking',
-      '--disable-prompt-on-repost',
-      '--disable-renderer-backgrounding',
-      '--disable-sync',
-      '--disable-translate',
-      '--metrics-recording-only',
-      '--no-first-run',
-      '--safebrowsing-disable-auto-update',
-      '--enable-automation',
-      '--password-store=basic',
-      '--use-mock-keychain'
-    ]
     return chromeLauncher.launch({
-      chromeFlags: flag,
+      chromeFlags: [
+        '--headless',
+        '--disable-gpu',
+        '--proxy-server="direct://"',
+        '--proxy-bypass-list=*',
+        '--disable-background-networking',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-breakpad',
+        '--disable-client-side-phishing-detection',
+        '--disable-default-apps',
+        '--disable-dev-shm-usage',
+        '--disable-extensions',
+        '--disable-features=site-per-process',
+        '--disable-hang-monitor',
+        '--disable-ipc-flooding-protection',
+        '--disable-popup-blocking',
+        '--disable-prompt-on-repost',
+        '--disable-renderer-backgrounding',
+        '--disable-sync',
+        '--disable-translate',
+        '--metrics-recording-only',
+        '--no-first-run',
+        '--safebrowsing-disable-auto-update',
+        '--enable-automation',
+        '--password-store=basic',
+        '--use-mock-keychain'
+    ],
       executablePath: getChromiumExecPath()
     })
 }
@@ -196,8 +168,6 @@ async function launch (puppeteer) {
     }
   }
 
-
-
   async function saveFile(dirpath,result,type){
     let filename;
     let date = new Date().getTime();
@@ -210,7 +180,7 @@ async function launch (puppeteer) {
           if (err) throw err;
       
           console.log("The file was succesfully saved!", filename);
-         }); 
+        }); 
 
       })
     }
@@ -220,15 +190,21 @@ async function launch (puppeteer) {
         if (err) throw err;
     
         console.log("The file was succesfully saved!", filename);
-       }); 
+      }); 
     }
   }
 
-  function fileSaveComplete(data){
-    console.log(data);
+
+
+  function outputConsole(result){
+    console.log('-----------Results-----------');
+    console.log('Date: %s',result.date);
+    console.log('Server: %s',result.location);
+    console.log('Ping: %s ms',result.ping);
+    console.log('Jitter: %s ms',result.jitter);
+    console.log('Download: %s Mbps',result.download);
+    console.log('Upload: %s Mbps',result.upload);
+    console.log('-----------------------------');
   }
-
-
-
 
   module.exports.speedTest = runSpeed;
