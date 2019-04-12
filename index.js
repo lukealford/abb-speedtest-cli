@@ -32,9 +32,8 @@ async function getSpeed() {
     await speedFrame.waitForSelector('.gauge-assembly',{visible:true,timeout:0})
     console.log('Running speedtest...')
     await speedFrame.waitForSelector('.results-container-stage-finished',{visible:true,timeout:0})
-    console.log('Speedtest complete...')
+    console.log('Speedtest complete, parsing results...')
     await page.waitForSelector('#results',{visible:true,timeout:0})
-    console.log(pendingXHR.pendingXhrCount());
     await page.waitFor(500);
     await pendingXHR.waitForAllXhrFinished();
     //stuff for screenshot
@@ -47,6 +46,24 @@ async function getSpeed() {
     // const base64 = await page.screenshot({path:'./'+filename, encoding:'base64', clip: { x:620, y:208, width: 677.3, height: 481.8   }})
   
     const result = await speedFrame.evaluate(() => {
+
+
+      function timenow(){
+          var now= new Date(), 
+          ampm= 'am', 
+          h= now.getHours(), 
+          m= now.getMinutes(), 
+          s= now.getSeconds();
+          if(h>= 12){
+              if(h>12) h -= 12;
+              ampm= 'pm';
+          }
+      
+          if(m<10) m= '0'+m;
+          if(s<10) s= '0'+s;
+          return now.toLocaleDateString()+ ' ' + h + ':' + m + ':' + s + ' ' + ampm;
+      }
+
         
       let loctemp = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > footer > div.host-display-transition > div > div.host-display__connection.host-display__connection--sponsor > div.host-display__connection-body > h4 > span').innerText;
       let split = loctemp.split(',')
@@ -55,7 +72,7 @@ async function getSpeed() {
       let jitter = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > main > div.results-container.results-container-stage-finished > div.results-latency > div.result-tile.result-tile-jitter > div.result-body > div > div > span').innerText;
       let download = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > main > div.results-container.results-container-stage-finished > div.results-speed > div.result-tile.result-tile-download > div.result-body > div > div > span').innerText;
       let upload = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > main > div.results-container.results-container-stage-finished > div.results-speed > div.result-tile.result-tile-upload > div.result-body > div > div > span').innerText;
-      let date = new Date().toLocaleDateString();    
+      let date = timenow();    
       let res = {
         location,ping,jitter,download,upload,date
       }
@@ -135,6 +152,9 @@ async function launch (puppeteer) {
   function getChromiumExecPath() {
     return puppeteer.executablePath();
   }
+
+
+ 
 
 
 
