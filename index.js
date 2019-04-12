@@ -7,6 +7,7 @@ var puppeteer = require('puppeteer-core');
 var request = require('request');
 const chromeLauncher = require('chrome-launcher');
 const util = require('util');
+const { PendingXHR } = require('pending-xhr-puppeteer');
 
 async function getSpeed() {
     
@@ -20,6 +21,7 @@ async function getSpeed() {
   
     store.set('processPID', chrome.pid) 
     const page = await browser.newPage()
+    const pendingXHR = new PendingXHR(page);
     await page.setViewport({ width: 1920, height: 1080 })
     await page.goto('http://speed.aussiebroadband.com.au/', {timeout: 80000})
     await page.waitFor(5000)
@@ -32,8 +34,9 @@ async function getSpeed() {
     await speedFrame.waitForSelector('.results-container-stage-finished',{visible:true,timeout:0})
     console.log('Speedtest complete...')
     await page.waitForSelector('#results',{visible:true,timeout:0})
-  
-    await page.waitFor(500)
+    console.log(pendingXHR.pendingXhrCount());
+    await page.waitFor(500);
+    await pendingXHR.waitForAllXhrFinished();
     //stuff for screenshot
     const month =  new Date().getMonth()+1;         
     const year = new Date().getFullYear();
@@ -52,9 +55,9 @@ async function getSpeed() {
       let jitter = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > main > div.results-container.results-container-stage-finished > div.results-latency > div.result-tile.result-tile-jitter > div.result-body > div > div > span').innerText;
       let download = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > main > div.results-container.results-container-stage-finished > div.results-speed > div.result-tile.result-tile-download > div.result-body > div > div > span').innerText;
       let upload = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > main > div.results-container.results-container-stage-finished > div.results-speed > div.result-tile.result-tile-upload > div.result-body > div > div > span').innerText;
-          
+      let date = new Date().toLocaleDateString();    
       let res = {
-        location,ping,jitter,download,upload
+        location,ping,jitter,download,upload,date
       }
       
       return res
@@ -76,11 +79,12 @@ return new Promise((resolve, reject) => {
             console.log('results:',result.result);
         }else{
             console.log('-----------Results-----------');
-            console.log('Server %s',result.result.location);
-            console.log('Ping %s ms',result.result.ping);
-            console.log('Jitter %s ms',result.result.jitter);
-            console.log('Download %s Mbps',result.result.download);
-            console.log('Upload %s Mbps',result.result.upload);
+            console.log('Date: %s',result.result.date);
+            console.log('Server: %s',result.result.location);
+            console.log('Ping: %s ms',result.result.ping);
+            console.log('Jitter: %s ms',result.result.jitter);
+            console.log('Download: %s Mbps',result.result.download);
+            console.log('Upload: %s Mbps',result.result.upload);
             console.log('-----------------------------');
         }
 

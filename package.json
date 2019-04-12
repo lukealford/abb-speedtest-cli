@@ -20,6 +20,7 @@
   "dependencies": {
     "chrome-launcher": "^0.10.5",
     "commander": "^2.20.0",
+    "pending-xhr-puppeteer": "^2.0.0",
     "puppeteer-core": "^1.14.0",
     "request": "^2.88.0",
     "store": "^2.0.12"
