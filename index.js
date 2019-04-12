@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 'use strict';
 const program = require('commander');
-
-var store = require('store');
-var puppeteer = require('puppeteer-core');
-var request = require('request');
+const store = require('store');
+const puppeteer = require('puppeteer-core');
+const request = require('request');
+const jsonexport = require('jsonexport');
 const chromeLauncher = require('chrome-launcher');
 const util = require('util');
 const { PendingXHR } = require('pending-xhr-puppeteer');
+const fs = require('fs');
 
 async function getSpeed() {
     
@@ -90,11 +91,40 @@ async function getSpeed() {
 async function runSpeed(option){
 console.log('Booting speedtest');
 let result = await getSpeed();
-return new Promise((resolve, reject) => {
+return new Promise(async (resolve, reject)  => {
     if(result){
-        if(option == true){
-            console.log('results:',result.result);
-        }else{
+        if(option.json === true){
+            if(option.save === true){
+              try {
+                await checkDirectorySync(option.saveDir);
+                await saveFile(option.saveDir,result.result,'json');
+  
+              } catch (err) {
+                console.error(err)
+              }
+            }else{
+              console.log('results:',result.result);
+            }
+            
+        }
+        else if(option.csv == true){
+          if(option.save === true){
+            try {
+              checkDirectorySync(option.saveDir);
+              await saveFile(option.saveDir,result.result,'csv');
+
+            } catch (err) {
+              console.error(err)
+            }
+          }
+          else{
+            jsonexport(result.result,function(err, csv){
+              if(err) return console.log(err);
+              console.log(csv);
+            });
+          }
+        }
+        else{
             console.log('-----------Results-----------');
             console.log('Date: %s',result.result.date);
             console.log('Server: %s',result.result.location);
@@ -154,7 +184,50 @@ async function launch (puppeteer) {
   }
 
 
- 
+  function checkDirectorySync(directory) {
+    try {
+      fs.statSync(directory);
+    } catch(e) {    
+      try {
+          fs.mkdirSync(directory);
+      } catch(e) {
+          return e;
+      }
+    }
+  }
+
+
+
+  async function saveFile(dirpath,result,type){
+    let filename;
+    let date = new Date().getTime();
+    if(type === 'csv'){
+      filename = dirpath+'\\result-'+date+".csv";
+      jsonexport(result,function(err, csv){
+        if(err) return console.log(err);
+
+        fs.writeFile(filename, csv, (err) => {
+          if (err) throw err;
+      
+          console.log("The file was succesfully saved!", filename);
+         }); 
+
+      })
+    }
+    if(type === 'json'){
+      filename = dirpath+'\\result-'+date+".json";
+      fs.writeFile(filename, JSON.stringify(result), (err) => {
+        if (err) throw err;
+    
+        console.log("The file was succesfully saved!", filename);
+       }); 
+    }
+  }
+
+  function fileSaveComplete(data){
+    console.log(data);
+  }
+
 
 
 

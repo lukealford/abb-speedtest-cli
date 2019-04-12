@@ -21,6 +21,7 @@ Run using `abb-speedtest`
 
 ```
 -----------Results-----------
+Date: 4/12/2019 6:10:06 pm
 Server Melbourne
 Ping 29 ms
 Jitter 4 ms
@@ -30,19 +31,24 @@ Upload 17.5 Mbps
 
 ```
 
-## JSON Output
-
-Use the `-j` flag example `abb-speedtest -j`
+## Options
 
 
-```json
-{   
-    "location": "Melbourne",
-    "ping": 26,
-    "jitter": 6,
-    "download": 47.2,
-    "upload": 17.5 
-}
+
+
+```
+Usage: abb-speedtest [options]
+
+Runs a speedtest using speed.aussiebroadband.com.au
+
+Options:
+  -V, --version            output the version number
+  -j, --json [optional]    return json
+  -c, --csv [optional]     return csv format
+  -s, --save [optional]    saves format to user\Documents\abb-speedtests
+  -o, --output [optional]  overwitres output location
+  -h, --help               output usage information
+
 ```
 
 
