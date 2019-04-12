@@ -7,8 +7,8 @@ A CLI tool for running https://speed.aussiebroadband.com.au  in a headless envir
 
 Install dependencies
 ```
-npm install
-
+git clone https://github.com/lukealford/abb-speedtest-cli.git
+npm install -g
 ```
 
 
