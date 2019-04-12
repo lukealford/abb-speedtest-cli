@@ -9,16 +9,16 @@ const chromeLauncher = require('chrome-launcher');
 const util = require('util');
 const { PendingXHR } = require('pending-xhr-puppeteer');
 const fs = require('fs');
-const flags = require('./chromeFlags');
 
 async function getSpeed() {
+
     const chrome  = await launch(puppeteer);
     const resp = await util.promisify(request)(`http://localhost:${chrome.port}/json/version`)
     const { webSocketDebuggerUrl } = JSON.parse(resp.body)
     const browser = await puppeteer.connect({
       browserWSEndpoint: webSocketDebuggerUrl
     })
-  
+
     store.set('processPID', chrome.pid) 
     const page = await browser.newPage()
     const pendingXHR = new PendingXHR(page);
@@ -36,6 +36,7 @@ async function getSpeed() {
     await page.waitForSelector('#results',{visible:true,timeout:0})
     await page.waitFor(500);
     await pendingXHR.waitForAllXhrFinished();
+
     const result = await speedFrame.evaluate(() => {
       function timenow(){
           var now= new Date(), 
@@ -100,13 +101,20 @@ async function runSpeed(option){
             }
             else{
               jsonexport(result.result,function(err, csv){
-                if(err) return console.log(err);
+                if(err) console.log(err);
                 console.log(csv);
               });
             }
           }
           else{
-            outputConsole(result.result);
+            console.log('-----------Results-----------');
+            console.log('Date: %s',result.result.date);
+            console.log('Server: %s',result.result.location);
+            console.log('Ping: %s ms',result.result.ping);
+            console.log('Jitter: %s ms',result.result.jitter);
+            console.log('Download: %s Mbps',result.result.download);
+            console.log('Upload: %s Mbps',result.result.upload);
+            console.log('-----------------------------');
           }
       }else{
           console.log('Speedtest failed');
@@ -174,7 +182,7 @@ async function launch (puppeteer) {
     if(type === 'csv'){
       filename = dirpath+'\\result-'+date+".csv";
       jsonexport(result,function(err, csv){
-        if(err) return console.log(err);
+        if(err) console.log(err);
 
         fs.writeFile(filename, csv, (err) => {
           if (err) throw err;
@@ -196,15 +204,5 @@ async function launch (puppeteer) {
 
 
 
-  function outputConsole(result){
-    console.log('-----------Results-----------');
-    console.log('Date: %s',result.date);
-    console.log('Server: %s',result.location);
-    console.log('Ping: %s ms',result.ping);
-    console.log('Jitter: %s ms',result.jitter);
-    console.log('Download: %s Mbps',result.download);
-    console.log('Upload: %s Mbps',result.upload);
-    console.log('-----------------------------');
-  }
 
   module.exports.speedTest = runSpeed;
