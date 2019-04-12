@@ -7,7 +7,7 @@ Chrome is required as a main dependencie as I'm using [puppeteer-core](https://g
 
 **Setup**
 
-Install dependencies
+Clone & Install dependencies
 ```
 git clone https://github.com/lukealford/abb-speedtest-cli.git
 npm install -g
