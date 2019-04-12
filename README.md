@@ -34,8 +34,6 @@ Upload 17.5 Mbps
 ## Options
 
 
-
-
 ```
 Usage: abb-speedtest [options]
 
@@ -46,7 +44,7 @@ Options:
   -j, --json [optional]    return json
   -c, --csv [optional]     return csv format
   -s, --save [optional]    saves format to user\Documents\abb-speedtests
-  -o, --output [optional]  overwitres output location
+  -o, --output [optional]  overwrites output location
   -h, --help               output usage information
 
 ```

@@ -14,7 +14,7 @@ program
   .option('-j, --json [optional]', 'return json')
   .option('-c, --csv [optional]', 'return csv format')
   .option('-s, --save [optional]', 'saves format to user\\Documents\\abb-speedtests')
-  .option('-o, --output [optional]', 'overwitres output location')
+  .option('-o, --output [optional]', 'overwrites output location')
   .action(function(req,optional){
     let dir = '';
     if(program.save){
@@ -24,8 +24,7 @@ program
           console.log('Saving result defualt directory:', dir)
         } catch (err) {
           console.error(err)
-        }
-      
+        } 
     }
     
     if(program.save == true && program.output){
