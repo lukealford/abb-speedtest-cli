@@ -2,6 +2,8 @@
 
 A CLI tool for running https://speed.aussiebroadband.com.au  in a headless environment
 
+Chrome is required as a main dependencie as I'm using [puppeteer-core](https://github.com/GoogleChrome/puppeteer) and it requires it preinstalled.
+
 
 **Setup**
 
