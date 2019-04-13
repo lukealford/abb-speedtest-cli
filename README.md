@@ -1,4 +1,4 @@
-# abb-speedtest
+# abb-speedtest [![dependencies](https://david-dm.org/lukealford/abb-speedtest-cli/status.svg)](https://david-dm.org/lukealford/abb-speedtest-cli) <a href="https://codeclimate.com/github/lukealford/abb-speedtest-cli/maintainability"><img src="https://api.codeclimate.com/v1/badges/34a78004c17aa3757568/maintainability" /></a>
 
 A CLI tool for running https://speed.aussiebroadband.com.au  in a headless environment
 
