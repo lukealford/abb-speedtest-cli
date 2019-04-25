@@ -1,11 +1,13 @@
 # abb-speedtest [![dependencies](https://david-dm.org/lukealford/abb-speedtest-cli/status.svg)](https://david-dm.org/lukealford/abb-speedtest-cli) <a href="https://codeclimate.com/github/lukealford/abb-speedtest-cli/maintainability"><img src="https://api.codeclimate.com/v1/badges/34a78004c17aa3757568/maintainability" /></a>
 
-A CLI tool for running https://speed.aussiebroadband.com.au  in a headless environment
+A CLI tool for running https://speed.aussiebroadband.com.au  in a headless environment built with nodejs
 
 Chrome is required as a main dependencie as I'm using [puppeteer-core](https://github.com/GoogleChrome/puppeteer) and it requires it preinstalled.
 
 
 **Setup**
+
+nstall nodejs 8.5.0+
 
 Clone & Install dependencies
 ```
