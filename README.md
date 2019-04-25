@@ -7,7 +7,7 @@ Chrome is required as a main dependencie as I'm using [puppeteer-core](https://g
 
 **Setup**
 
-nstall nodejs 8.5.0+
+Install nodejs 8.5.0+
 
 Clone & Install dependencies
 ```
