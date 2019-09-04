@@ -1,6 +1,6 @@
 {
   "name": "abb-speedtest-cli",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "A cli tool for running aussie broadband speed test",
   "main": "index.js",
   "scripts": {

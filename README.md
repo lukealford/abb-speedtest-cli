@@ -43,6 +43,7 @@ Runs a speedtest using speed.aussiebroadband.com.au
 
 Options:
   -V, --version            output the version number
+  -l, --location [Sydney] [optional]    use specific server location
   -j, --json [optional]    return json
   -c, --csv [optional]     return csv format
   -s, --save [optional]    saves format to user\Documents\abb-speedtests

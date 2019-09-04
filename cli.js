@@ -4,13 +4,14 @@
  * Module dependencies.
  */
 var program = require('commander');
-var speedtest = require('./index').speedTest;
+var runSpeedTest = require('./index').runSpeedTest;
 const homedir = require('os').homedir();
 const fs = require('fs');
 
 program
-  .version('1.1.0')
+  .version('1.2.0')
   .description('Runs a speedtest using speed.aussiebroadband.com.au')
+  .option('-l, --location [Sydney] [optional]', 'use specific server location')
   .option('-j, --json [optional]', 'return json')
   .option('-c, --csv [optional]', 'return csv format')
   .option('-s, --save [optional]', 'saves format to user\\Documents\\abb-speedtests')
@@ -21,7 +22,7 @@ program
         dir = homedir+"\\Documents\\abb-speedtests";
         try {
           checkFolder(dir)
-          console.log('Saving result defualt directory:', dir)
+          console.log('Saving result default directory:', dir)
         } catch (err) {
           console.error(err)
         } 
@@ -38,7 +39,8 @@ program
         }
     }
 
-    let input = {
+    let option = {
+      location: program.location,
       json:program.json,
       csv:program.csv,
       save:program.save,
@@ -46,7 +48,7 @@ program
       saveDir: dir
     }
    
-    speedtest(input);
+    runSpeedTest(option);
   })  
   
 program.parse(process.argv);
