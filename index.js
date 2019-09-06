@@ -36,6 +36,11 @@ async function getSpeed(option) {
     var frames = await page.frames()
     var speedFrame = frames.find(f =>f.url().indexOf("speedtestcustom") > 0)
 
+    if (option.quiet != undefined) {
+      console.log('Quiet mode. Result will not be reported to ABB.');
+      await page.evaluate("$.post=function(){}");
+    }
+
     if (option.location != undefined) {
       let locName = option.location.toLowerCase();
       console.log('Custom server location id:', locationIds[locName]);

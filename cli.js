@@ -12,6 +12,7 @@ program
   .version('1.2.0')
   .description('Runs a speedtest using speed.aussiebroadband.com.au')
   .option('-l, --location [Sydney] [optional]', 'use specific server location')
+  .option('-q, --quiet [optional]', 'disables result reporting to ABB')
   .option('-j, --json [optional]', 'return json')
   .option('-c, --csv [optional]', 'return csv format')
   .option('-s, --save [optional]', 'saves format to user\\Documents\\abb-speedtests')
@@ -41,6 +42,7 @@ program
 
     let option = {
       location: program.location,
+      quiet: program.quiet,
       json:program.json,
       csv:program.csv,
       save:program.save,
