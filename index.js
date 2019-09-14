@@ -97,7 +97,9 @@ async function getSpeed(option) {
   
 async function runSpeedTest(option){
   console.log('Booting speedtest');
+
   let result = await getSpeed(option);
+
   return new Promise(async (resolve, reject)  => {
       if(result){
           if(option.json === true){
@@ -112,7 +114,7 @@ async function runSpeedTest(option){
                 console.log('results:',result.result);
               }
           }
-          else if(option.csv == true){
+          else if(option.csv == true || option.dcsv != undefined){
             if(option.save === true){
               try {
                 checkDirectorySync(option.saveDir);
@@ -122,7 +124,29 @@ async function runSpeedTest(option){
               }
             }
             else{
-              jsonexport(result.result,function(err, csv){
+              let rawResult = result.result;
+              let isDcsv = option.dcsv != undefined;
+              let csvConfig = {
+                verticalOutput: !isDcsv,
+                includeHeaders: !isDcsv // doesn't seem to work
+              };
+
+              let normalizedResult = isDcsv
+                ? {
+                  serverId: locationIds[rawResult.location.toLowerCase()],
+                  sponsor: "Aussie Broadband",
+                  serverName: rawResult.location,
+                  timestamp: (new Date()).toISOString(),
+                  distance: "",
+                  ping: rawResult.ping,
+                  download: parseFloat(rawResult.download) * 1024 * 1024,
+                  upload: parseFloat(rawResult.upload) * 1024 * 1024,
+                  share: "",
+                  ip: ""
+                }
+                : rawResult;
+
+              jsonexport(normalizedResult, csvConfig, function (err, csv) {
                 if(err) console.log(err);
                 console.log(csv);
               });
