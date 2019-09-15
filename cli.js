@@ -15,6 +15,7 @@ program
   .option('-q, --quiet [optional]', 'disables result reporting to ABB')
   .option('-j, --json [optional]', 'return json')
   .option('-c, --csv [optional]', 'return csv format')
+  .option('-d, --dcsv [optional]', 'return csv format in speedtest-cli shape (non-save flow only)')
   .option('-s, --save [optional]', 'saves format to user\\Documents\\abb-speedtests')
   .option('-o, --output [optional]', 'overwrites output location')
   .action(function(req,optional){
@@ -45,6 +46,7 @@ program
       quiet: program.quiet,
       json:program.json,
       csv:program.csv,
+      dcsv:program.dcsv,
       save:program.save,
       output:program.output,
       saveDir: dir
