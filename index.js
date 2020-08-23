@@ -201,7 +201,7 @@ async function launch (puppeteer) {
         '--use-mock-keychain'
     ],
       executablePath: getChromiumExecPath()
-    })
+    }).catch(err => console.error('Most likely chromium is not installed:',err))
 }
 
 
