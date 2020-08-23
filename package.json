@@ -18,7 +18,7 @@
   "author": "Luke Alford",
   "license": "MIT",
   "dependencies": {
-    "chrome-launcher": "^0.10.5",
+    "chrome-launcher": "^0.13.4",
     "commander": "^2.20.0",
     "jsonexport": "^2.4.1",
     "pending-xhr-puppeteer": "^2.0.0",
