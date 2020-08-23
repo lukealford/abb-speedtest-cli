@@ -10,9 +10,17 @@ const util = require('util');
 const { PendingXHR } = require('pending-xhr-puppeteer');
 const fs = require('fs');
 
-async function getSpeed() {
+const locationIds = {
+  'melbourne': 14670,
+  'sydney': 15132,
+  'adelaide': 15135,
+  'brisbane': 15134,
+  'perth': 15136
+}
 
-    const chrome  = await launch(puppeteer);
+async function getSpeed(option) {
+
+    const chrome = await launch(puppeteer);
     const resp = await util.promisify(request)(`http://localhost:${chrome.port}/json/version`)
     const { webSocketDebuggerUrl } = JSON.parse(resp.body)
     const browser = await puppeteer.connect({
@@ -27,9 +35,23 @@ async function getSpeed() {
     await page.waitFor(5000)
     var frames = await page.frames()
     var speedFrame = frames.find(f =>f.url().indexOf("speedtestcustom") > 0)
+
+    if (option.quiet != undefined) {
+      console.log('Quiet mode. Result will not be reported to ABB.');
+      await page.evaluate("$.post=function(){}");
+    }
+
+    if (option.location != undefined) {
+      let locName = option.location.toLowerCase();
+      console.log('Custom server location id:', locationIds[locName]);
+      await speedFrame.click("#main-content > .host-select > .host-list-single");
+      await speedFrame.click('.modal-gateway .host-listview__list .host-listview__list-item__button[data-id="' + locationIds[locName] + '"]');
+    }
+    
     await speedFrame.$("#main-content > div.button__wrapper > div > button")
     await speedFrame.click('#main-content > div.button__wrapper > div > button')
     await speedFrame.waitForSelector('.gauge-assembly',{visible:true,timeout:0})
+
     console.log('Running speedtest...')
     await speedFrame.waitForSelector('.results-container-stage-finished',{visible:true,timeout:0})
     console.log('Speedtest complete, parsing results...')
@@ -73,9 +95,11 @@ async function getSpeed() {
     return {result};
   }
   
-async function runSpeed(option){
+async function runSpeedTest(option){
   console.log('Booting speedtest');
-  let result = await getSpeed();
+
+  let result = await getSpeed(option);
+
   return new Promise(async (resolve, reject)  => {
       if(result){
           if(option.json === true){
@@ -90,7 +114,7 @@ async function runSpeed(option){
                 console.log('results:',result.result);
               }
           }
-          else if(option.csv == true){
+          else if(option.csv == true || option.dcsv != undefined){
             if(option.save === true){
               try {
                 checkDirectorySync(option.saveDir);
@@ -100,7 +124,29 @@ async function runSpeed(option){
               }
             }
             else{
-              jsonexport(result.result,function(err, csv){
+              let rawResult = result.result;
+              let isDcsv = option.dcsv != undefined;
+              let csvConfig = {
+                verticalOutput: !isDcsv,
+                includeHeaders: !isDcsv // doesn't seem to work
+              };
+
+              let normalizedResult = isDcsv
+                ? {
+                  serverId: locationIds[rawResult.location.toLowerCase()],
+                  sponsor: "Aussie Broadband",
+                  serverName: rawResult.location,
+                  timestamp: (new Date()).toISOString(),
+                  distance: "",
+                  ping: rawResult.ping,
+                  download: parseFloat(rawResult.download) * 1024 * 1024,
+                  upload: parseFloat(rawResult.upload) * 1024 * 1024,
+                  share: "",
+                  ip: ""
+                }
+                : rawResult;
+
+              jsonexport(normalizedResult, csvConfig, function (err, csv) {
                 if(err) console.log(err);
                 console.log(csv);
               });
@@ -205,4 +251,4 @@ async function launch (puppeteer) {
 
 
 
-  module.exports.speedTest = runSpeed;
+  module.exports.runSpeedTest = runSpeedTest;
