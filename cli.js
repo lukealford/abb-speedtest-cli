@@ -6,6 +6,7 @@
 var program = require('commander');
 var runSpeedTest = require('./index').runSpeedTest;
 const homedir = require('os').homedir();
+const path = require('path');
 const fs = require('fs');
 
 program
@@ -16,12 +17,12 @@ program
   .option('-j, --json [optional]', 'return json')
   .option('-c, --csv [optional]', 'return csv format')
   .option('-d, --dcsv [optional]', 'return csv format in speedtest-cli shape (non-save flow only)')
-  .option('-s, --save [optional]', 'saves format to user\\Documents\\abb-speedtests')
+  .option('-s, --save [optional]', 'saves format to user\\Documents\\abb-speedtests, requires you to set a format')
   .option('-o, --output [optional]', 'overwrites output location')
   .action(function(req,optional){
     let dir = '';
     if(program.save){
-        dir = homedir+"\\Documents\\abb-speedtests";
+        dir = homedir+path.sep+"Documents"+path.sep+"abb-speedtests";
         try {
           checkFolder(dir)
           console.log('Saving result default directory:', dir)
