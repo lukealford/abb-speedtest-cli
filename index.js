@@ -23,7 +23,7 @@ async function getSpeed() {
     const page = await browser.newPage()
     const pendingXHR = new PendingXHR(page);
     await page.setViewport({ width: 1920, height: 1080 })
-    await page.goto('http://speed.aussiebroadband.com.au/', {timeout: 80000})
+    await page.goto('http://speed.aussiebroadband.com.au/', { timeout: 120000, waitUntil: 'networkidle0' })
     await page.waitFor(5000)
     var frames = await page.frames()
     var speedFrame = frames.find(f =>f.url().indexOf("speedtestcustom") > 0)
