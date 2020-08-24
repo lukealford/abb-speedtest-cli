@@ -234,7 +234,7 @@ async function launch (puppeteer) {
         fs.writeFile(filename, csv, (err) => {
           if (err) throw err;
       
-          console.log("The file was succesfully saved!", filename);
+          console.log("The file was successfully saved!", filename);
         }); 
 
       })
@@ -244,7 +244,7 @@ async function launch (puppeteer) {
       fs.writeFile(filename, JSON.stringify(result), (err) => {
         if (err) throw err;
     
-        console.log("The file was succesfully saved!", filename);
+        console.log("The file was successfully saved!", filename);
       }); 
     }
   }
