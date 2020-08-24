@@ -7,6 +7,7 @@ const request = require('request');
 const jsonexport = require('jsonexport');
 const chromeLauncher = require('chrome-launcher');
 const util = require('util');
+const path = require('path');
 const { PendingXHR } = require('pending-xhr-puppeteer');
 const fs = require('fs');
 
@@ -226,7 +227,7 @@ async function launch (puppeteer) {
     let filename;
     let date = new Date().getTime();
     if(type === 'csv'){
-      filename = dirpath+'\\result-'+date+".csv";
+      filename = dirpath+path.sep+'result-'+date+".csv";
       jsonexport(result,function(err, csv){
         if(err) console.log(err);
 
@@ -239,7 +240,7 @@ async function launch (puppeteer) {
       })
     }
     if(type === 'json'){
-      filename = dirpath+'\\result-'+date+".json";
+      filename = dirpath+path.sep+'result-'+date+".json";
       fs.writeFile(filename, JSON.stringify(result), (err) => {
         if (err) throw err;
     
