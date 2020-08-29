@@ -172,42 +172,46 @@ async function runSpeedTest(option){
 
 // Launch Puppeteer
 async function launch (puppeteer) {
+    var chromeFlags = [
+      '--headless',
+      '--disable-gpu',
+      '--proxy-server="direct://"',
+      '--proxy-bypass-list=*',
+      '--disable-background-networking',
+      '--disable-background-timer-throttling',
+      '--disable-backgrounding-occluded-windows',
+      '--disable-breakpad',
+      '--disable-client-side-phishing-detection',
+      '--disable-default-apps',
+      '--disable-dev-shm-usage',
+      '--disable-extensions',
+      '--disable-features=site-per-process',
+      '--disable-hang-monitor',
+      '--disable-ipc-flooding-protection',
+      '--disable-popup-blocking',
+      '--disable-prompt-on-repost',
+      '--disable-renderer-backgrounding',
+      '--disable-sync',
+      '--disable-translate',
+      '--metrics-recording-only',
+      '--no-first-run',
+      '--safebrowsing-disable-auto-update',
+      '--enable-automation',
+      '--password-store=basic',
+      '--use-mock-keychain'
+    ];
+    if (process.env.CHROME_EXTRA_FLAG) {
+      chromeFlags.push(process.env.CHROME_EXTRA_FLAG);
+    }
     return chromeLauncher.launch({
-      chromeFlags: [
-        '--headless',
-        '--disable-gpu',
-        '--proxy-server="direct://"',
-        '--proxy-bypass-list=*',
-        '--disable-background-networking',
-        '--disable-background-timer-throttling',
-        '--disable-backgrounding-occluded-windows',
-        '--disable-breakpad',
-        '--disable-client-side-phishing-detection',
-        '--disable-default-apps',
-        '--disable-dev-shm-usage',
-        '--disable-extensions',
-        '--disable-features=site-per-process',
-        '--disable-hang-monitor',
-        '--disable-ipc-flooding-protection',
-        '--disable-popup-blocking',
-        '--disable-prompt-on-repost',
-        '--disable-renderer-backgrounding',
-        '--disable-sync',
-        '--disable-translate',
-        '--metrics-recording-only',
-        '--no-first-run',
-        '--safebrowsing-disable-auto-update',
-        '--enable-automation',
-        '--password-store=basic',
-        '--use-mock-keychain'
-    ],
+      chromeFlags: chromeFlags,
       executablePath: getChromiumExecPath()
     }).catch(err => console.error('Most likely chromium is not installed:',err))
 }
 
 
   function getChromiumExecPath() {
-    return puppeteer.executablePath();
+    return process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath();
   }
 
 
