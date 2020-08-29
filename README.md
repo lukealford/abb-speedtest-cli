@@ -64,3 +64,18 @@ Options:
     "store": "^2.0.12"
 
 ```
+
+## Docker setup and usage
+
+Instead of installing all components directly, you can also build a Docker container like this:
+```
+docker build --tag=abb-speedtest .
+```
+
+Then to run it:
+```
+docker run --rm abb-speedtest
+```
+
+In these cases, you do not need to install any dependencies, apart from having a working Docker system.
+
