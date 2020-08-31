@@ -82,9 +82,10 @@ async function getSpeed(option) {
       let jitter = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > main > div.results-container.results-container-stage-finished > div.results-latency > div.result-tile.result-tile-jitter > div.result-body > div > div > span').innerText;
       let download = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > main > div.results-container.results-container-stage-finished > div.results-speed > div.result-tile.result-tile-download > div.result-body > div > div > span').innerText;
       let upload = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > main > div.results-container.results-container-stage-finished > div.results-speed > div.result-tile.result-tile-upload > div.result-body > div > div > span').innerText;
-      let date = timenow();    
+      let date = timenow();
+      let isodate = new Date().toISOString();
       let res = {
-        location,ping,jitter,download,upload,date
+        location,ping,jitter,download,upload,date,isodate
       }
       return res
     })
@@ -156,6 +157,7 @@ async function runSpeedTest(option){
           else{
             console.log('-----------Results-----------');
             console.log('Date: %s',result.result.date);
+            console.log('ISO Date: %s',result.result.isodate);
             console.log('Server: %s',result.result.location);
             console.log('Ping: %s ms',result.result.ping);
             console.log('Jitter: %s ms',result.result.jitter);
