@@ -13,4 +13,4 @@ COPY . /app/
 WORKDIR /app
 RUN npm install --unsafe-perm -g && chown -R 1000 /app
 USER 1000
-CMD abb-speedtest
+ENTRYPOINT ["/usr/bin/abb-speedtest"]
