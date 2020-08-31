@@ -38,13 +38,14 @@ async function getSpeed(option) {
     var frames = await page.frames()
     var speedFrame = frames.find(f =>f.url().indexOf("speedtestcustom") > 0)
     if (option.quiet != undefined) {
-      console.log('Quiet mode. Result will not be reported to ABB.');
       await page.evaluate("$.post=function(){}");
     }
 
     if (option.location != undefined) {
       let locName = option.location.toLowerCase();
-      console.log('Custom server location id:', locationIds[locName]);
+      if (option.quiet == undefined) {
+        console.log('Custom server location id:', locationIds[locName]);
+      }
       await speedFrame.click("#main-content > .host-select > .host-list-single");
       await speedFrame.click('.modal-gateway .host-listview__list .host-listview__list-item__button[data-id="' + locationIds[locName] + '"]');
     }
@@ -53,9 +54,13 @@ async function getSpeed(option) {
     await speedFrame.click('#main-content > div.button__wrapper > div > button')
     await speedFrame.waitForSelector('.gauge-assembly',{visible:true,timeout:0})
 
-    console.log('Running speedtest...')
+    if (option.quiet == undefined) {
+      console.log('Running speedtest...')
+    }
     await speedFrame.waitForSelector('.results-container-stage-finished',{visible:true,timeout:0})
-    console.log('Speedtest complete, parsing results...')
+    if (option.quiet == undefined) {
+      console.log('Speedtest complete, parsing results...')
+    }
     await page.waitForSelector('#results',{visible:true,timeout:0})
     await page.waitFor(500);
     await pendingXHR.waitForAllXhrFinished();
@@ -99,7 +104,9 @@ async function getSpeed(option) {
   }
   
 async function runSpeedTest(option){
-  console.log('Booting speedtest');
+  if (option.quiet == undefined) {
+    console.log('Booting speedtest');
+  }
 
   let result = await getSpeed(option);
 
@@ -240,8 +247,9 @@ async function launch (puppeteer) {
 
         fs.writeFile(filename, csv, (err) => {
           if (err) throw err;
-      
-          console.log("The file was successfully saved!", filename);
+          if (option.quiet == undefined) {
+            console.log("The file was successfully saved!", filename);
+          }
         }); 
 
       })
@@ -250,8 +258,9 @@ async function launch (puppeteer) {
       filename = dirpath+path.sep+'result-'+date+".json";
       fs.writeFile(filename, JSON.stringify(result), (err) => {
         if (err) throw err;
-    
-        console.log("The file was successfully saved!", filename);
+        if (option.quiet == undefined) {
+          console.log("The file was successfully saved!", filename);
+        }
       }); 
     }
   }
