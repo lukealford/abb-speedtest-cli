@@ -44,8 +44,11 @@ Runs a speedtest using speed.aussiebroadband.com.au
 Options:
   -V, --version            output the version number
   -l, --location [Sydney] [optional]    use specific server location
+  -q, --quiet [optional]   silences the progress console output messages (errors still outputed)
+  -r, --report [optional]  disables result reporting to ABB')
   -j, --json [optional]    return json
   -c, --csv [optional]     return csv format
+  -d, --dcsv [optional]    return csv format in speedtest-cli shape (non-save flow only)
   -s, --save [optional]    saves format to user\Documents\abb-speedtests
   -o, --output [optional]  overwrites output location
   -h, --help               output usage information

@@ -13,7 +13,8 @@ program
   .version('1.3.5')
   .description('Runs a speedtest using speed.aussiebroadband.com.au')
   .option('-l, --location [Sydney] [optional]', 'use specific server location')
-  .option('-q, --quiet [optional]', 'disables result reporting to ABB')
+  .option('-q, --quiet [optional]', 'silences the progress console output messages (errors still outputed)')
+  .option('-r, --report [optional]', 'disables result reporting to ABB')
   .option('-j, --json [optional]', 'return json')
   .option('-c, --csv [optional]', 'return csv format')
   .option('-d, --dcsv [optional]', 'return csv format in speedtest-cli shape (non-save flow only)')
@@ -45,6 +46,7 @@ program
     let option = {
       location: program.location,
       quiet: program.quiet,
+      report: program.report,
       json:program.json,
       csv:program.csv,
       dcsv:program.dcsv,
