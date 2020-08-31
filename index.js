@@ -112,7 +112,7 @@ async function runSpeedTest(option){
                   console.error(err)
                 }
               }else{
-                console.log('results:',result.result);
+                console.log(JSON.stringify(result.result));
               }
           }
           else if(option.csv == true || option.dcsv != undefined){

@@ -75,6 +75,8 @@ docker build --tag=abb-speedtest .
 Then to run it:
 ```
 docker run --rm abb-speedtest
+# Optionally, include parameters like this:
+docker run --rm abb-speedtest --json
 ```
 
 In these cases, you do not need to install any dependencies, apart from having a working Docker system.
