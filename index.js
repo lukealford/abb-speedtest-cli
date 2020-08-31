@@ -8,6 +8,7 @@ const jsonexport = require('jsonexport');
 const chromeLauncher = require('chrome-launcher');
 const util = require('util');
 const path = require('path');
+const os = require('os')
 const { PendingXHR } = require('pending-xhr-puppeteer');
 const fs = require('fs');
 
@@ -36,7 +37,6 @@ async function getSpeed(option) {
     await page.waitFor(5000)
     var frames = await page.frames()
     var speedFrame = frames.find(f =>f.url().indexOf("speedtestcustom") > 0)
-
     if (option.quiet != undefined) {
       console.log('Quiet mode. Result will not be reported to ABB.');
       await page.evaluate("$.post=function(){}");
@@ -94,6 +94,7 @@ async function getSpeed(option) {
     await browser.close();
     //await chrome.kill()
     // return {result, 'filename':base64}
+    result['hostname'] = os.hostname();
     return {result};
   }
   

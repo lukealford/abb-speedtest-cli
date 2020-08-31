@@ -10,7 +10,7 @@ const path = require('path');
 const fs = require('fs');
 
 program
-  .version('1.2.0')
+  .version('1.3.5')
   .description('Runs a speedtest using speed.aussiebroadband.com.au')
   .option('-l, --location [Sydney] [optional]', 'use specific server location')
   .option('-q, --quiet [optional]', 'disables result reporting to ABB')
