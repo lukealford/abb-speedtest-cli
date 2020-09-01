@@ -45,7 +45,7 @@ Options:
   -V, --version            output the version number
   -l, --location [Sydney] [optional]    use specific server location
   -q, --quiet [optional]   silences the progress console output messages (errors still outputed)
-  -r, --report [optional]  disables result reporting to ABB
+  -h, --hide [optional]  disables result reporting to ABB
   -j, --json [optional]    return json
   -c, --csv [optional]     return csv format
   -d, --dcsv [optional]    return csv format in speedtest-cli shape (non-save flow only)
