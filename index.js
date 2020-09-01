@@ -37,7 +37,7 @@ async function getSpeed(option) {
     await page.waitFor(5000)
     var frames = await page.frames()
     var speedFrame = frames.find(f =>f.url().indexOf("speedtestcustom") > 0)
-    if (option.quiet != undefined) {
+    if (option.hide != undefined) {
       await page.evaluate("$.post=function(){}");
     }
 
