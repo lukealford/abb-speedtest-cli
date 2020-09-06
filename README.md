@@ -80,6 +80,8 @@ Then to run it:
 docker run --rm abb-speedtest
 # Optionally, include parameters like this:
 docker run --rm abb-speedtest --json
+# You can also set the Docker container timezone like this:
+docker run --rm -e TZ=Australia/Sydney abb-speedtest
 ```
 
 In these cases, you do not need to install any dependencies, apart from having a working Docker system.
