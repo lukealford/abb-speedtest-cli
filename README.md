@@ -74,14 +74,21 @@ Instead of installing all components directly, you can also build a Docker conta
 ```
 docker build --tag=abb-speedtest .
 ```
+Note: Australia/Sydney is defined in the Dockerfile as the default Timezone.
+
+Add the following environment variable to your run command (Replacing STATE with your location) to specify an alternate Timezone.
+
+```
+-e TZ=Australia/STATE
+```
 
 Then to run it:
 ```
 docker run --rm abb-speedtest
 # Optionally, include parameters like this:
 docker run --rm abb-speedtest --json
-# You can also set the Docker container timezone like this:
-docker run --rm -e TZ=Australia/Sydney abb-speedtest
+# You can also set the Docker container timezone manually like this:
+docker run --rm -e TZ=Australia/Perth abb-speedtest
 ```
 
 In these cases, you do not need to install any dependencies, apart from having a working Docker system.
