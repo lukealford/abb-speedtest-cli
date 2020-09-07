@@ -1,3 +1,4 @@
+ARG LOCALEZONE=Australia/Sydney
 FROM alpine:3.12
 LABEL maintainer="tjc@wintrmute.net"
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
@@ -5,7 +6,9 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 # Chrome's sandboxing doesn't work in a Docker container - but that probably doesn't matter,
 # since the Docker container is itself a kind of sandbox.
 ENV CHROME_EXTRA_FLAG="--no-sandbox"
-ENV TZ=Australia/Sydney
+RUN apk --no-cache add curl
+RUN curl --silent "http://worldtimeapi.org/api/ip" --stderr - | grep -oP '(?<=timezone":").*(?=","unixtime)' && echo ${LOCALEZONE}
+ENV TZ=${LOCALEZONE}
 RUN apk update && \
     apk add chromium chromium-chromedriver nodejs npm curl && \
     adduser -D -u 1000 speedtest && \
