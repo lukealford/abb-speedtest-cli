@@ -74,13 +74,6 @@ Instead of installing all components directly, you can also build a Docker conta
 ```
 docker build --tag=abb-speedtest .
 ```
-Note: Australia/Sydney is defined in the Dockerfile as the default Timezone.
-
-Add the following environment variable to your run command (Replacing STATE with your location) to specify an alternate Timezone.
-
-```
--e TZ=Australia/STATE
-```
 
 Then to run it:
 ```
