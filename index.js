@@ -66,20 +66,6 @@ async function getSpeed(option) {
     await pendingXHR.waitForAllXhrFinished();
 
     const result = await speedFrame.evaluate(() => {
-      function timenow(){
-          var now= new Date(), 
-          ampm= 'am', 
-          h= now.getHours(), 
-          m= now.getMinutes(), 
-          s= now.getSeconds();
-          if(h>= 12){
-              if(h>12) h -= 12;
-              ampm= 'pm';
-          }
-          if(m<10) m= '0'+m;
-          if(s<10) s= '0'+s;
-          return now.toLocaleDateString()+ ' ' + h + ':' + m + ':' + s + ' ' + ampm;
-      }
       let loctemp = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > footer > div.host-display-transition > div > div.host-display__connection.host-display__connection--sponsor > div.host-display__connection-body > h4 > span').innerText;
       let split = loctemp.split(',')
       let location = split[0];
@@ -87,7 +73,7 @@ async function getSpeed(option) {
       let jitter = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > main > div.results-container.results-container-stage-finished > div.results-latency > div.result-tile.result-tile-jitter > div.result-body > div > div > span').innerText;
       let download = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > main > div.results-container.results-container-stage-finished > div.results-speed > div.result-tile.result-tile-download > div.result-body > div > div > span').innerText;
       let upload = document.querySelector('#root > div > div.test.test--finished.test--in-progress > div.container > main > div.results-container.results-container-stage-finished > div.results-speed > div.result-tile.result-tile-upload > div.result-body > div > div > span').innerText;
-      let date = timenow();
+      let date = new Date().toLocaleString("en-AU", {timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone}).replace(/0/, '').replace(/0/, '');
       let isodate = new Date().toISOString();
       let res = {
         location,ping,jitter,download,upload,date,isodate

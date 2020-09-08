@@ -11,6 +11,12 @@ RUN apk update && \
     mkdir -p /app
 COPY . /app/
 WORKDIR /app
+RUN apk --no-cache add grep && \
+	curl --silent "http://worldtimeapi.org/api/ip" --stderr - | grep -oP '(?<=timezone":").*(?=","unixtime)' > /app/timezone
+RUN apk add tzdata && \
+	LOCALEZONE=$(cat /app/timezone) && \
+	ln -snf /usr/share/zoneinfo/$LOCALEZONE /etc/localtime && \
+	echo $LOCALEZONE > /etc/timezone
 RUN npm install --unsafe-perm -g && chown -R 1000 /app
 USER 1000
 ENTRYPOINT ["/usr/bin/abb-speedtest"]
