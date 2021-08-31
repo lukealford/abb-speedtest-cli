@@ -102,7 +102,7 @@ async function runSpeedTest(option){
               if(option.save === true){
                 try {
                   await checkDirectorySync(option.saveDir);
-                  await saveFile(option.saveDir,result.result,'json');
+                  await saveFile(option.saveDir,result.result,'json',option.quiet);
                 } catch (err) {
                   console.error(err)
                 }
@@ -114,7 +114,7 @@ async function runSpeedTest(option){
             if(option.save === true){
               try {
                 checkDirectorySync(option.saveDir);
-                await saveFile(option.saveDir,result.result,'csv');
+                await saveFile(option.saveDir,result.result,'csv',option.quiet);
               } catch (err) {
                 console.error(err)
               }
@@ -223,7 +223,7 @@ async function launch (puppeteer) {
     }
   }
 
-  async function saveFile(dirpath,result,type){
+  async function saveFile(dirpath,result,type,quiet){
     let filename;
     let date = new Date().getTime();
     if(type === 'csv'){
@@ -233,8 +233,8 @@ async function launch (puppeteer) {
 
         fs.writeFile(filename, csv, (err) => {
           if (err) throw err;
-          if (option.quiet == undefined) {
-            console.log("The file was successfully saved!", filename);
+          if (quiet == undefined) {
+            console.log("The file was successfully saved!", filename)
           }
         }); 
 
@@ -244,8 +244,8 @@ async function launch (puppeteer) {
       filename = dirpath+path.sep+'result-'+date+".json";
       fs.writeFile(filename, JSON.stringify(result), (err) => {
         if (err) throw err;
-        if (option.quiet == undefined) {
-          console.log("The file was successfully saved!", filename);
+        if (quiet == undefined) {
+          console.log("The file was successfully saved!", filename)
         }
       }); 
     }
